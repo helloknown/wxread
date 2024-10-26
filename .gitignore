@@ -1,0 +1,13 @@
+.Python
+env/
+venv/
+ENV/
+venv*/
+env*/
+*.egg-info/
+dist/
+build/
+*.egg
+*.whl
+*.log
+logs/

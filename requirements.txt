@@ -1,0 +1,17 @@
+# HTTP请求相关
+requests>=2.31.0
+
+# 配置文件解析
+pyyaml>=6.0.1
+
+# 时间处理
+python-dateutil>=2.8.2
+
+# 日志处理相关
+colorlog>=6.8.0  # 为控制台日志输出添加颜色支持
+
+# 类型提示支持
+typing-extensions>=4.9.0  # Python 3.7+的类型提示扩展
+
+# 数据处理
+urllib3>=2.2.0  # requests的依赖，也被直接使用
