@@ -17,6 +17,6 @@ def load_config(config_file: str) -> UserConfig:
         headers=config['headers'],
         cookies=config['cookies'],
         data=config['data'],
-        max_times=config['max_times'],
+        max_times=config.get('max_times', 50),
         token=config['token']
     )

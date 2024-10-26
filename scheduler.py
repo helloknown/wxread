@@ -17,7 +17,7 @@ class TaskScheduler:
         # 当前时间转换为北京时间 (UTC+8)
         now = datetime.utcnow() + timedelta(hours=8)
         # 设置下一次启动时间为次日6点
-        next_start_time = datetime(now.year, now.month, now.day, 6, 40)
+        next_start_time = datetime(now.year, now.month, now.day, 6, 30)
         # 如果当前时间已经过了6点，计划在下一个6点启动
         if now.hour >= 6:
             next_start_time += timedelta(days=1)
