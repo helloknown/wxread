@@ -51,6 +51,7 @@ class WeReadWorker:
         result = sc_send(self.config.token, f"用户 {self.user_id} 自动阅读脚本开始运行！")
         self.logger.info(result)
 
+        err_times = 5
         while num <= self.config.max_times:
             self.logger.info(f"用户 {self.user_id} - 第{num}次，共阅读{num * 0.5}分钟")
             
@@ -79,9 +80,14 @@ class WeReadWorker:
                     num += 1
                     time.sleep(random.randint(25, 55))
                 else:
-                    self.logger.warning(f"用户 {self.user_id} 数据格式问题,尝试初始化cookie值")
+                    err_times -= 1
+                    self.logger.warning(f"用户 {self.user_id} 数据格式问题,尝试初始化cookie值，剩余重试次数:{err_times}")
                     self.config.cookies['wr_skey'] = get_wr_skey(self.config.headers, self.config.cookies)
-                    num -= 1
+                    if err_times == 0:
+                        result = sc_send(self.config.token, f"用户 {self.user_id} 获取 cookie 失败，请联系管理员！")
+                        self.logger.info(result)
+                        break
+                    time.sleep(10)
 
             except Exception as e:
                 self.logger.error(f"用户 {self.user_id} 发生错误: {str(e)}")

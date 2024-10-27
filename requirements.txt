@@ -15,3 +15,5 @@ typing-extensions>=4.9.0  # Python 3.7+的类型提示扩展
 
 # 数据处理
 urllib3>=2.2.0  # requests的依赖，也被直接使用
+
+pytz
