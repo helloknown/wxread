@@ -44,21 +44,22 @@ class WeReadWorker:
         return hex(_7032f5 + _cc1055)[2:].lower()
 
     def process_reading(self) -> None:
-        self.logger.info(f"用户 {self.user_id} - process_reading start...")
+        self.logger.info(f"用户 {self.user_id} - 自动阅读开始...")
         num = 1
+        total_reading_time = 0
         data = self.config.data.copy()
 
-        result = sc_send(self.config.token, f"用户 {self.user_id} 自动阅读脚本开始运行！")
+        result = sc_send(self.config.token, f"今日自动阅读开始！")
         self.logger.info(result)
 
         err_times = 5
         while num <= self.config.max_times:
-            self.logger.info(f"用户 {self.user_id} - 第{num}次，共阅读{num * 0.5}分钟")
-            
             # 更新数据
+            read_time = random.randint(25, 55)
             current_time = int(time.time())
             data['ct'] = current_time
             data['ts'] = int(current_time * 1000)
+            data['rt'] = read_time
             data['rn'] = random.randint(0, 1000)
             data['sg'] = hashlib.sha256(
                 ("" + str(data['ts']) + str(data['rn']) + self.key).encode()
@@ -72,20 +73,23 @@ class WeReadWorker:
                     cookies=self.config.cookies,
                     data=json.dumps(data, separators=(',', ':'))
                 )
+                time.sleep(read_time)
                 res_data = response.json()
                 self.logger.info(f"用户 {self.user_id} 响应: {res_data}")
 
                 if 'succ' in res_data:
                     self.logger.info(f"用户 {self.user_id} 数据格式正确，阅读进度有效！")
+                    self.logger.info(f"用户 {self.user_id} - 第{num}次，共阅读{read_time}秒")
                     num += 1
-                    time.sleep(random.randint(25, 55))
+                    total_reading_time += read_time
                 else:
                     err_times -= 1
                     self.logger.warning(f"用户 {self.user_id} 数据格式问题,尝试初始化cookie值，剩余重试次数:{err_times}")
                     self.config.cookies['wr_skey'] = get_wr_skey(self.config.headers, self.config.cookies)
                     if err_times == 0:
-                        result = sc_send(self.config.token, f"用户 {self.user_id} 获取 cookie 失败，请联系管理员！")
-                        self.logger.info(result)
+                        self.logger.error(f"用户 {self.user_id} 获取 cookie 失败，请联系管理员！")
+                        self.logger.error(result)
+                        result = sc_send(self.config.token, f"获取 cookie 失败，请联系管理员！")
                         break
                     time.sleep(10)
 
@@ -93,8 +97,9 @@ class WeReadWorker:
                 self.logger.error(f"用户 {self.user_id} 发生错误: {str(e)}")
                 time.sleep(60)  # 发生错误时等待1分钟再试
 
-            if num == self.config.max_times:
-                result = sc_send(self.config.token, f"用户 {self.user_id} 自动阅读脚本运行已完成！")
+            if num > self.config.max_times:
+                total_minutes = int(total_reading_time // 60)
+                result = sc_send(self.config.token, f"今日自动阅读已完成！本次阅读时间：{total_minutes}分钟")
                 self.logger.info(result)
                 break
 

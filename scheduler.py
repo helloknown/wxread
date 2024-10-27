@@ -21,7 +21,7 @@ class TaskScheduler:
         # 设置下一次启动时间为次日6点
         next_start_time = tz_beijing.localize(datetime(now.year, now.month, now.day, 6, 30))
         # 如果当前时间已经过了6点，计划在下一个6点启动
-        if now.hour >= 6 and now.minute >= 30:
+        if now.hour >= 6:
             next_start_time += timedelta(days=1)
             
         # 添加随机延迟（0-30分钟）
