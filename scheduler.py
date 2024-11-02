@@ -58,7 +58,7 @@ class TaskScheduler:
 
                 if self.running:
                     self.logger.info(f"开始执行任务 [{task_name}]")
-                    # task()
+                    task()
                     self.logger.info(f"任务 [{task_name}] 执行完成")
 
             except Exception as e:
