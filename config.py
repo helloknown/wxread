@@ -9,6 +9,7 @@ class UserConfig:
     data: Dict[str, Any]
     max_times: int
     token: str
+    start_time: str
 
 def load_config(config_file: str) -> UserConfig:
     with open(config_file, 'r', encoding='utf-8') as f:
@@ -18,5 +19,6 @@ def load_config(config_file: str) -> UserConfig:
         cookies=config['cookies'],
         data=config['data'],
         max_times=config.get('max_times', 50),
-        token=config['token']
+        token=config['token'],
+        start_time=config['start_time']
     )

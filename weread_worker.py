@@ -56,6 +56,10 @@ class WeReadWorker:
         while num <= self.config.max_times:
             # 更新数据
             read_time = random.randint(25, 55)
+            # 单次阅读最长不得超过24小时
+            if total_reading_time+read_time >= 24 * 3600:
+                break
+
             current_time = int(time.time())
             data['ct'] = current_time
             data['ts'] = int(current_time * 1000)
@@ -81,6 +85,7 @@ class WeReadWorker:
                     self.logger.info(f"用户 {self.user_id} 数据格式正确，阅读进度有效！")
                     self.logger.info(f"用户 {self.user_id} - 第{num}次，共阅读{read_time}秒")
                     num += 1
+                    err_times = 5
                     total_reading_time += read_time
                 else:
                     err_times -= 1
@@ -110,7 +115,8 @@ class WeReadWorker:
         """启动工作线程"""
         self.scheduler.start(
             task=self.process_reading,
-            task_name=f"WeRead-{self.user_id}"
+            task_name=f"WeRead-{self.user_id}",
+            config=self.config
         )
 
     def stop(self) -> None:

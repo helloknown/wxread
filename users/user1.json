@@ -54,7 +54,7 @@
         "co": 338,
         "sm": "第四章　货币形式货币结晶是交换过程的必然",
         "pr": 4,
-        "rt": 13,
+        "rt": 30,
         "ts": 1729948381561,
         "rn": 326,
         "sg": "8ee940e81412b80e9b9a9f645b31801f60225d4762ea7bea8e6fe4cc3c8a1494",
@@ -64,5 +64,6 @@
         "s": "3b923a74"
     },
     "max_times": 50,
-    "token": "SCT261211TvSPcVq9aIha6666OVViljHWd0H"
+    "token": "SCT261211TvSPcVq9aIha6666OVViljHWd0H",
+    "start_time": "2230"
 }
